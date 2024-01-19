@@ -4,7 +4,10 @@ import { LanguageCode } from '@/src/zeus';
 export type Variant = ProductDetailType['variants'][number];
 
 export type ExtendedProduct = ProductDetailType & {
-    currentColor?: string;
+    currentColor?: {
+        name: string;
+        code: string;
+    };
     otherColors?: {
         handle: string;
         name: string;
@@ -18,7 +21,7 @@ export type ExtendedProduct = ProductDetailType & {
 };
 
 export type ProductContainerType = {
-    product?: ProductDetailType;
+    product?: ExtendedProduct;
     variant?: Variant;
     addingError?: string;
     handleVariant: (variant?: Variant) => void;

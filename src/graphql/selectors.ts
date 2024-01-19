@@ -120,8 +120,9 @@ export const ProductSlugSelector = Selector('Product')({
 });
 
 export const ProductDetailsFacetSelector = Selector('FacetValue')({
-    name: true,
     id: true,
+    name: true,
+    code: true,
     translations: { name: true, languageCode: true, id: true },
 });
 

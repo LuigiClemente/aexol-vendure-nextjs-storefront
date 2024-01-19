@@ -3,6 +3,7 @@ import { ProductDetailSelector, homePageSlidersSelector } from '@/src/graphql/se
 import { getCollections } from '@/src/graphql/sharedQueries';
 import { ContextModel, makeStaticProps } from '@/src/lib/getStatic';
 import { arrayToTree } from '@/src/util/arrayToTree';
+import { SortOrder } from '@/src/zeus';
 
 export const getStaticProps = async (context: ContextModel<{ slug?: string }>) => {
     const r = await makeStaticProps(['common', 'products'])(context);
@@ -10,23 +11,36 @@ export const getStaticProps = async (context: ContextModel<{ slug?: string }>) =
     const { slug } = context.params || {};
     const api = SSGQuery(r.context);
 
-    const currentColor =
-        slug?.split('-') && slug?.split('-').length > 2 ? slug?.split('-')[slug?.split('-').length - 1] : slug;
-    const _slug = slug?.replace(`-${currentColor}`, '');
-    console.log(_slug);
+    const { facets } = await api({
+        facets: [
+            { options: { filter: { name: { contains: 'kolor' } }, sort: { createdAt: SortOrder.DESC } } },
+            {
+                items: {
+                    name: true,
+                    values: { name: true, code: true },
+                },
+            },
+        ],
+    });
+
+    const colorsOfTable = facets.items.find(f => f.name.toLowerCase() === 'kolor blatu');
+    const currentColor = colorsOfTable?.values.find(v => {
+        const name = v.name.toLowerCase().split(' ').join('-');
+        return slug?.endsWith(`-${name}`);
+    });
+    const cleanHandle = slug?.replace('-' + currentColor?.name.toLowerCase().split(' ').join('-'), '');
+    const isColorSelected = !!currentColor;
+
+    console.log(cleanHandle);
+
     const response =
         typeof slug === 'string'
             ? await api({
-                  product: [{ slug: _slug }, ProductDetailSelector],
+                  product: [{ slug: cleanHandle }, ProductDetailSelector],
               })
             : null;
 
-    console.log('HERE');
     if (!response?.product) return { notFound: true };
-
-    const productFacetValues = response.product.facetValues.map(fv => fv.name.toLowerCase());
-    const isColorSelected = productFacetValues.includes(currentColor?.toLowerCase() || '');
-    console.log(isColorSelected);
 
     const collections = await getCollections(r.context);
     const navigation = arrayToTree(collections);
@@ -66,7 +80,7 @@ export const getStaticProps = async (context: ContextModel<{ slug?: string }>) =
     const otherColors = product.facetValues.map(fv => {
         return {
             ...fv,
-            handle: `${product.slug}-${fv.name.toLowerCase()}`,
+            handle: `${product.slug}-${fv.name.toLowerCase().replace(' ', '-')}`,
         };
     });
 

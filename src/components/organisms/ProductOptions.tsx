@@ -2,11 +2,13 @@ import styled from '@emotion/styled';
 import { TP, Stack } from '@/src/components/atoms';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ProductOptionsGroup } from '@/src/state/product/types';
+import { ProductDetailsFacetType } from '@/src/graphql/selectors';
 
 interface ProductOptionsProps {
     productOptionsGroups: ProductOptionsGroup[];
     handleClick: (groupId: string, optionId: string) => void;
     addingError?: string;
+    otherColors: ProductDetailsFacetType[];
 }
 
 export const ProductOptions: React.FC<ProductOptionsProps> = ({ productOptionsGroups, handleClick, addingError }) => {

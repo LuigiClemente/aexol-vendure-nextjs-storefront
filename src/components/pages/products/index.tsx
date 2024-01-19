@@ -60,6 +60,7 @@ export const ProductPage: React.FC<InferGetStaticPropsType<typeof getStaticProps
         };
         fetchData();
     }, [product?.id]);
+
     return (
         <Layout categories={props.collections} navigation={props.navigation}>
             <ContentContainer>
@@ -97,34 +98,48 @@ export const ProductPage: React.FC<InferGetStaticPropsType<typeof getStaticProps
                                             </CategoryBlock>
                                         );
                                     })}
-                                <TH1 size="2.5rem">{product?.name}</TH1>
+                                <TH1 size="2.5rem">
+                                    {product?.name} {product?.currentColor ? `(${product?.currentColor.name})` : ''}
+                                </TH1>
                                 {variant && <Price price={variant.priceWithTax} currencyCode={variant.currencyCode} />}
                             </ProductInfoStack>
                             <Stack w100>
                                 {product && product.variants.length > 1 ? (
-                                    <Stack column>
+                                    <Stack column gap="2rem">
                                         <ProductOptions
                                             productOptionsGroups={productOptionsGroups}
                                             handleClick={handleOptionClick}
                                             addingError={addingError}
+                                            otherColors={props.product.otherColors}
                                         />
-                                        <Stack>
-                                            {props.product.otherColors.map(x => {
-                                                return (
-                                                    <Link
-                                                        style={{
-                                                            textTransform: 'uppercase',
-                                                            color:
-                                                                props.product.currentColor === x.name.toLowerCase()
-                                                                    ? 'red'
-                                                                    : 'black',
-                                                        }}
-                                                        href={`/products/${x.handle}?variant=${variant?.id}`}
-                                                        key={x.handle}>
-                                                        {x.name}
-                                                    </Link>
-                                                );
-                                            })}
+                                        <Stack gap="1rem" column>
+                                            <TP color="subtitle">Kolor blatu</TP>
+                                            <Stack gap="1rem">
+                                                {props.product.otherColors.map(x => {
+                                                    const color = x.code.startsWith('#');
+                                                    return (
+                                                        <Link
+                                                            style={{
+                                                                border:
+                                                                    props.product.currentColor?.name.toLowerCase() ===
+                                                                    x.name.toLowerCase()
+                                                                        ? '2px solid black'
+                                                                        : '2px solid transparent',
+                                                                textTransform: 'uppercase',
+                                                                width: '3rem',
+                                                                height: '3rem',
+                                                                ...(color
+                                                                    ? { backgroundColor: x.code }
+                                                                    : {
+                                                                          backgroundImage: `url(http://localhost:3000/assets/${x.code}.png)`,
+                                                                      }),
+                                                            }}
+                                                            href={`/products/${x.handle}?variant=${variant?.id}`}
+                                                            key={x.handle}
+                                                        />
+                                                    );
+                                                })}
+                                            </Stack>
                                         </Stack>
                                     </Stack>
                                 ) : null}

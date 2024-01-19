@@ -4,6 +4,7 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 
 const firstLetterToUpperCase = (str: string) => str.charAt(0).toUpperCase() + str.slice(1);
+const capitalize = (str: string) => str.split(' ').map(firstLetterToUpperCase).join(' ');
 
 export const CustomHelmet: React.FC<{
     pageTitle: string;
@@ -15,7 +16,9 @@ export const CustomHelmet: React.FC<{
     const jsonLD = generateJSONLD({ product, collection, variant });
     let title = pageTitle;
     if (product && variant) {
-        title = `${product.name} ${firstLetterToUpperCase(product.currentColor ?? '')} | ${pageTitle}`;
+        title = `${product.name} ${
+            product.currentColor ? capitalize(product.currentColor.name.toLowerCase()) : ''
+        } | ${pageTitle}`;
     }
     if (collection) {
         title = `${collection.name} | ${pageTitle}`;

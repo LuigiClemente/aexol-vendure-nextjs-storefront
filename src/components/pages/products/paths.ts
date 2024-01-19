@@ -16,7 +16,7 @@ export const getStaticPaths = async () => {
 
             products?.items.forEach(item => {
                 item.facetValues.forEach(facetValue => {
-                    items.push({ ...item, slug: `${item.slug}-${facetValue.name.toLowerCase()}` });
+                    items.push({ ...item, slug: `${item.slug}-${facetValue.name.replace(' ', '-').toLowerCase()}` });
                 });
                 items.push({ ...item, slug: `${item.slug}` });
             });

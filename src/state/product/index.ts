@@ -84,7 +84,7 @@ const useProductContainer = createContainer<ProductContainerType, { product: Ext
     const handleAddToCart = async () => {
         if (variant?.id)
             await addToCart({
-                variant: { id: variant.id, quantity: 1, product: { color: initialState.product.currentColor } },
+                variant: { id: variant.id, quantity: 1, product: { color: initialState.product.currentColor?.name } },
                 openCart: true,
             });
         else setAddingError(t('select-options'));
@@ -93,7 +93,7 @@ const useProductContainer = createContainer<ProductContainerType, { product: Ext
     const handleBuyNow = async () => {
         if (variant?.id) {
             await addToCart({
-                variant: { id: variant.id, quantity: 1, product: { color: initialState.product.currentColor } },
+                variant: { id: variant.id, quantity: 1, product: { color: initialState.product.currentColor?.name } },
             });
             push('/checkout');
         } else setAddingError(t('select-options'));
