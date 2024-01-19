@@ -30,7 +30,7 @@ export const ProductPage: React.FC<InferGetStaticPropsType<typeof getStaticProps
 
     const breadcrumbs = [
         { name: breadcrumb('breadcrumbs.home'), href: '/' },
-        { name: props.product.name, href: `/products/${props.product.slug}` },
+        { name: props.product?.name, href: `/products/${props.product.slug}` },
     ];
 
     const [recentlyProducts, setRecentlyProducts] = useState<ProductVariantTileType[]>([]);
@@ -109,9 +109,18 @@ export const ProductPage: React.FC<InferGetStaticPropsType<typeof getStaticProps
                                             addingError={addingError}
                                         />
                                         <Stack>
-                                            {props.otherColors.map(x => {
+                                            {props.product.otherColors.map(x => {
                                                 return (
-                                                    <Link href={`/products/${x.handle}`} key={x.handle}>
+                                                    <Link
+                                                        style={{
+                                                            textTransform: 'uppercase',
+                                                            color:
+                                                                props.product.currentColor === x.name.toLowerCase()
+                                                                    ? 'red'
+                                                                    : 'black',
+                                                        }}
+                                                        href={`/products/${x.handle}?variant=${variant?.id}`}
+                                                        key={x.handle}>
                                                         {x.name}
                                                     </Link>
                                                 );
@@ -150,7 +159,7 @@ export const ProductPage: React.FC<InferGetStaticPropsType<typeof getStaticProps
                                     </TP>
                                 </StockInfo>
                             </Stack>
-                            {!variant ? null : Number(variant.stockLevel) <= 0 ? (
+                            {!variant ? null : props.product.isColorSelected && Number(variant.stockLevel) <= 0 ? (
                                 <NotifyMeForm />
                             ) : (
                                 <Stack w100 gap="2.5rem" justifyBetween column>

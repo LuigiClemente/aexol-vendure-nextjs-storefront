@@ -2,13 +2,12 @@ import { createContainer } from 'unstated-next';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
-import { ProductDetailType } from '@/src/graphql/selectors';
 import { usePush } from '@/src/lib/redirect';
 import { useCart } from '@/src/state/cart';
-import { OptionGroupWithStock, ProductContainerType, Variant } from './types';
+import { ExtendedProduct, OptionGroupWithStock, ProductContainerType, Variant } from './types';
 import { findRelatedVariant, productEmptyState, setRecentlyViewedInCookie } from './utils';
 
-const useProductContainer = createContainer<ProductContainerType, { product: ProductDetailType }>(initialState => {
+const useProductContainer = createContainer<ProductContainerType, { product: ExtendedProduct }>(initialState => {
     if (!initialState?.product) return productEmptyState;
     const { t } = useTranslation('common');
     const push = usePush();
@@ -83,13 +82,19 @@ const useProductContainer = createContainer<ProductContainerType, { product: Pro
     };
 
     const handleAddToCart = async () => {
-        if (variant?.id) await addToCart(variant.id, 1, true);
+        if (variant?.id)
+            await addToCart({
+                variant: { id: variant.id, quantity: 1, product: { color: initialState.product.currentColor } },
+                openCart: true,
+            });
         else setAddingError(t('select-options'));
     };
 
     const handleBuyNow = async () => {
         if (variant?.id) {
-            await addToCart(variant.id, 1);
+            await addToCart({
+                variant: { id: variant.id, quantity: 1, product: { color: initialState.product.currentColor } },
+            });
             push('/checkout');
         } else setAddingError(t('select-options'));
     };

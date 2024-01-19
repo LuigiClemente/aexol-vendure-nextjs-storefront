@@ -10,17 +10,23 @@ export const getStaticProps = async (context: ContextModel<{ slug?: string }>) =
     const { slug } = context.params || {};
     const api = SSGQuery(r.context);
 
-    const slug2 = slug?.split('-')[slug?.split('-').length - 1];
-    console.log(slug2);
-
+    const currentColor =
+        slug?.split('-') && slug?.split('-').length > 2 ? slug?.split('-')[slug?.split('-').length - 1] : slug;
+    const _slug = slug?.replace(`-${currentColor}`, '');
+    console.log(_slug);
     const response =
         typeof slug === 'string'
             ? await api({
-                  product: [{ slug: slug.replace(`-${slug2}`, '') }, ProductDetailSelector],
+                  product: [{ slug: _slug }, ProductDetailSelector],
               })
             : null;
+
     console.log('HERE');
     if (!response?.product) return { notFound: true };
+
+    const productFacetValues = response.product.facetValues.map(fv => fv.name.toLowerCase());
+    const isColorSelected = productFacetValues.includes(currentColor?.toLowerCase() || '');
+    console.log(isColorSelected);
 
     const collections = await getCollections(r.context);
     const navigation = arrayToTree(collections);
@@ -60,9 +66,10 @@ export const getStaticProps = async (context: ContextModel<{ slug?: string }>) =
     const otherColors = product.facetValues.map(fv => {
         return {
             ...fv,
-            handle: `${product.slug}-${fv.name}`,
+            handle: `${product.slug}-${fv.name.toLowerCase()}`,
         };
     });
+
     const returnedStuff = {
         ...r.props,
         ...r.context,
@@ -70,8 +77,10 @@ export const getStaticProps = async (context: ContextModel<{ slug?: string }>) =
         product: {
             ...product,
             optionGroups,
+            currentColor,
+            otherColors,
+            isColorSelected,
         },
-        otherColors,
         collections,
         relatedProducts,
         clientsAlsoBought,

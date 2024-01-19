@@ -354,6 +354,9 @@ export const ActiveOrderSelector = Selector('Order')({
         linePriceWithTax: true,
         unitPriceWithTax: true,
         discountedLinePriceWithTax: true,
+        customFields: {
+            color: true,
+        },
         featuredAsset: {
             id: true,
             preview: true,

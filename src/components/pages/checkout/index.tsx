@@ -11,7 +11,7 @@ import { ContentContainer } from '@/src/components/atoms';
 export const CheckoutPage: React.FC<InferGetServerSidePropsType<typeof getServerSideProps>> = props => {
     const { t } = useTranslation('checkout');
     const { availableCountries, alsoBoughtProducts, eligibleShippingMethods, activeCustomer } = props;
-
+    console.log(props.checkout);
     return (
         <CheckoutLayout pageTitle={`${t('seoTitles.checkout')}`}>
             <Content>

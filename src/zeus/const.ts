@@ -32,13 +32,13 @@ export const AllTypesProps: Record<string,any> = {
 	},
 	Mutation:{
 		addItemToOrder:{
-
+			customFields:"OrderLineCustomFieldsInput"
 		},
 		removeOrderLine:{
 
 		},
 		adjustOrderLine:{
-
+			customFields:"OrderLineCustomFieldsInput"
 		},
 		applyCouponCode:{
 
@@ -434,6 +434,9 @@ export const AllTypesProps: Record<string,any> = {
 		name:"SortOrder",
 		slug:"SortOrder",
 		description:"SortOrder"
+	},
+	OrderLineCustomFieldsInput:{
+
 	},
 	NativeAuthInput:{
 
@@ -1179,7 +1182,7 @@ export const ReturnTypes: Record<string,any> = {
 		taxLines:"TaxLine",
 		order:"Order",
 		fulfillmentLines:"FulfillmentLine",
-		customFields:"JSON"
+		customFields:"OrderLineCustomFields"
 	},
 	Payment:{
 		id:"ID",
@@ -1758,6 +1761,9 @@ export const ReturnTypes: Record<string,any> = {
 	ActiveOrderResult:{
 		"...on Order":"Order",
 		"...on NoActiveOrderError":"NoActiveOrderError"
+	},
+	OrderLineCustomFields:{
+		color:"String"
 	}
 }
 

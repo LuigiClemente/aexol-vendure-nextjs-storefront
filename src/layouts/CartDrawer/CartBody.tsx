@@ -23,7 +23,15 @@ export const CartBody: React.FC<Props> = ({ currencyCode, activeOrder }) => {
         <CartList w100 column>
             {activeOrder && activeOrder.totalQuantity > 0 ? (
                 activeOrder.lines.map(
-                    ({ productVariant, id, featuredAsset, quantity, unitPriceWithTax, discountedLinePriceWithTax }) => {
+                    ({
+                        customFields,
+                        productVariant,
+                        id,
+                        featuredAsset,
+                        quantity,
+                        unitPriceWithTax,
+                        discountedLinePriceWithTax,
+                    }) => {
                         const optionInName = productVariant.name.replace(productVariant.product.name, '') !== '';
                         return (
                             <CartRow w100 justifyBetween key={id}>
@@ -36,7 +44,7 @@ export const CartBody: React.FC<Props> = ({ currencyCode, activeOrder }) => {
                                     <Stack column gap="2rem">
                                         <Stack column>
                                             <TP size="1.75rem" weight={500} noWrap>
-                                                {productVariant.product.name}
+                                                {productVariant.product.name} - {customFields?.color}
                                             </TP>
                                             {optionInName && (
                                                 <TP size="1.5rem" weight={400}>

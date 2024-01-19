@@ -26,14 +26,26 @@ const useCartContainer = createContainer(() => {
         }
     };
 
-    const addToCart = async (id: string, q: number, o?: boolean) => {
+    const addToCart = async ({
+        variant,
+        openCart,
+    }: {
+        variant: { id: string; quantity: number; product?: { color?: string } };
+        openCart?: boolean;
+    }) => {
         setActiveOrder(c => {
             return c && { ...c, totalQuantity: c.totalQuantity + 1 };
         });
         try {
             const { addItemToOrder } = await storefrontApiMutation(ctx)({
                 addItemToOrder: [
-                    { productVariantId: id, quantity: q },
+                    {
+                        productVariantId: variant.id,
+                        quantity: variant.quantity,
+                        ...(variant.product?.color && {
+                            customFields: { color: variant.product.color },
+                        }),
+                    },
                     {
                         __typename: true,
                         '...on Order': ActiveOrderSelector,
@@ -58,7 +70,7 @@ const useCartContainer = createContainer(() => {
             });
             if (addItemToOrder.__typename === 'Order') {
                 setActiveOrder(addItemToOrder);
-                if (o) open();
+                if (openCart) open();
             }
         } catch (e) {
             console.log(e);

@@ -1,6 +1,21 @@
 import { ProductDetailType } from '@/src/graphql/selectors';
+import { LanguageCode } from '@/src/zeus';
 
 export type Variant = ProductDetailType['variants'][number];
+
+export type ExtendedProduct = ProductDetailType & {
+    currentColor?: string;
+    otherColors?: {
+        handle: string;
+        name: string;
+        id: string;
+        translations: {
+            name: string;
+            id: string;
+            languageCode: LanguageCode;
+        }[];
+    }[];
+};
 
 export type ProductContainerType = {
     product?: ProductDetailType;

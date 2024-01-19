@@ -1,10 +1,13 @@
 import { CollectionType, ProductDetailType } from '@/src/graphql/selectors';
+import { ExtendedProduct } from '@/src/state/product/types';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 
+const firstLetterToUpperCase = (str: string) => str.charAt(0).toUpperCase() + str.slice(1);
+
 export const CustomHelmet: React.FC<{
     pageTitle: string;
-    product?: ProductDetailType;
+    product?: ExtendedProduct;
     variant?: ProductDetailType['variants'][number];
     collection?: CollectionType;
 }> = ({ pageTitle, product, collection, variant }) => {
@@ -12,7 +15,7 @@ export const CustomHelmet: React.FC<{
     const jsonLD = generateJSONLD({ product, collection, variant });
     let title = pageTitle;
     if (product && variant) {
-        title = `${product.name} | ${pageTitle}`;
+        title = `${product.name} ${firstLetterToUpperCase(product.currentColor ?? '')} | ${pageTitle}`;
     }
     if (collection) {
         title = `${collection.name} | ${pageTitle}`;
