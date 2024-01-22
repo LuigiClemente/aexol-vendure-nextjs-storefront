@@ -60,11 +60,13 @@ export const Footer: React.FC<{
                 <ContentContainer>
                     <Stack justifyBetween itemsCenter>
                         <Laws>
-                            {footerLaw?.map(l => (
-                                <Link key={l} href="#">
-                                    {l}
-                                </Link>
-                            ))}
+                            {Array.isArray(footerLaw)
+                                ? footerLaw?.map(l => (
+                                      <Link key={l} href="#">
+                                          {l}
+                                      </Link>
+                                  ))
+                                : null}
                         </Laws>
                         <Socials />
                     </Stack>

@@ -1,4 +1,4 @@
-import Page, { getServerSideProps } from '@/src/pages/[channel]/customer/sign-in/index.page';
+import Page, { getServerSideProps } from '@/src/pages/[locale]/customer/sign-in/index.page';
 import { Redirect } from '@/src/lib/redirect';
 import React from 'react';
 import type { InferGetServerSidePropsType } from 'next';

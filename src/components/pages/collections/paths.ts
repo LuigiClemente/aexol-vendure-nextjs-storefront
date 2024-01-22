@@ -2,7 +2,8 @@ import { SSGQuery } from '@/src/graphql/client';
 import { channels, DEFAULT_CHANNEL } from '@/src/lib/consts';
 import { getAllPossibleWithChannels } from '@/src/lib/getStatic';
 
-const getCollectionsPaths = async () => {
+const getCollectionsPaths = async ({ locales }: { locales: string[] }) => {
+    console.log(locales);
     const allPaths = getAllPossibleWithChannels();
     const resp = await Promise.all(
         allPaths.map(async path => {
@@ -42,7 +43,8 @@ const getCollectionsPaths = async () => {
     return resp.flatMap(data => data);
 };
 
-export const getStaticPaths = async () => {
-    const paths = await getCollectionsPaths();
+export const getStaticPaths = async ({ locales }: { locales: string[] }) => {
+    console.log(locales);
+    const paths = await getCollectionsPaths({ locales });
     return { paths, fallback: false };
 };

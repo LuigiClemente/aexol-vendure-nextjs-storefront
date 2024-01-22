@@ -2,7 +2,6 @@ import React from 'react';
 import '../styles/global.css';
 import 'keen-slider/keen-slider.min.css';
 import { AppProps } from 'next/app';
-import { appWithTranslation } from 'next-i18next';
 import { Nunito_Sans } from 'next/font/google';
 import { Global, ThemeProvider } from '@emotion/react';
 import { LightTheme } from '@/src/theme';
@@ -51,4 +50,4 @@ const App = ({ Component, pageProps }: AppProps) => {
     );
 };
 
-export default appWithTranslation(App);
+export default App;
